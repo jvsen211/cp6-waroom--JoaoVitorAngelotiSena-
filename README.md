@@ -7,3 +7,8 @@
 **Tipo:** rodada · **Voto:** A
 **Justificativa:** A concatenação de String misturava dado do usuário com código SQL, e por isso `' OR '1'='1` virava parte da query. O `PreparedStatement` usa parâmetros vinculados, que tratam a entrada sempre como valor e nunca como SQL, e corrige a causa em ~40 min. O trade-off é manter o acesso manual via JDBC, que exige cuidado com recursos (`close()`), enquanto a derived query (D) evitaria isso.
 **Placar do grupo após esta decisão:** 🔥 8 · 💰 R$ 35 mil · 🧹 1
+
+## ⚡ EVENTO RELÂMPAGO B: As conexões que não fecham (22h40)
+**Tipo:** relâmpago · **Voto:** C
+**Justificativa:** O pool esgotou porque Connection, Statement e ResultSet eram abertos e nunca fechados. Votamos C (delay entre requisições) para dar tempo ao banco de processar, mas o delay só alivia o sintoma e aumenta a latência na Black Friday, sem corrigir o vazamento. A correção real seria o `try-with-resources` (A), que garante o `close()` mesmo com exceção.
+**Placar do grupo após esta decisão:** 🔥 8 · 💰 R$ 35 mil · 🧹 2

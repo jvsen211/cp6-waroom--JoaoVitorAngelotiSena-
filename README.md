@@ -57,3 +57,33 @@ Não afetado: a R6 foi B (suíte saudável), então o grupo já tinha investigad
 **Perfil da noite:** A Noite dos Heróis (🔥 7 ou mais e 🧹 até 2)
 
 ---
+# 🩺 Pós-mortem: relatório de incidente da madrugada
+
+## Linha do tempo
+| Hora | Incidente | Mecanismo | Nossa escolha |
+|---|---|---|---|
+| 19h12 | R1: saldo negativo | exceção lançada e engolida pelo `catch` | C |
+| 21h02 | R2: injeção de SQL | concatenação de SQL | A |
+| 22h40 | ⚡B: conexões que não fecham | vazamento sem `close()` | C |
+| 22h50 | R3: contas gêmeas | Singleton sem instância guardada | C |
+| 00h47 | R4: comprovante invertido | origem/destino trocados na entidade gravada | B |
+| 01h30 | R5: factory devolve null | `return null` explodindo longe da causa | A |
+| 02h20 | ⚡C: cadastro com metade dos campos | telescópio de construtores | B |
+| 03h20 | ⚡D: teste sem assert | teste verde que não verifica nada | A |
+| 03h45 | R6: teste vermelho | contrato (R$ 5) contra código (R$ 50) | B |
+| 06h15 | R7: Go/No-Go | | A |
+
+## O caminho do grupo
+Corrigimos a causa em vez de mascarar na maioria das rodadas (R1, R4, R5, R6), aceitando atrasos em troca de integridade. As escolhas mais fracas foram o ⚡B (delay no lugar do `try-with-resources`) e a R3 (auditar antes de corrigir). O ⚡B só existiu porque escolhemos o `PreparedStatement` manual na R2, e uma escolha da noite voltou para nos assombrar. O placar subiu de 🔥 7 para 8 e fechou com 🧹 1 e R$ 100 mil de prejuízo.
+
+## Causa raiz de 2 incidentes
+**R1 (Aula 11, exceções):** o `SaldoInsuficienteException` era lançado dentro de um `try` e capturado por um `catch` vazio no próprio método. Como o `debitar()` ficava fora do `try`, ele rodava sempre, e a regra de negócio era anulada pela exceção que deveria protegê-la.
+
+**R2 (Aulas 12 e 13, JDBC/JPA):** o SQL era montado por concatenação de String, então a entrada do usuário (`' OR '1'='1`) virava parte do código SQL. Parâmetros vinculados, no `PreparedStatement` ou na derived query, tratam a entrada sempre como valor, nunca como SQL.
+
+## O que faríamos diferente
+1. **R2:** votaríamos D (derived query `findByTitular`). Ela resolve a injeção usando a abstração que já existia e evita o acesso manual via JDBC que gerou o vazamento do ⚡B.
+2. **R3:** votaríamos A ou D, corrigindo o Singleton ou delegando a numeração ao banco (sequence), e auditaríamos as duplicatas já existentes em paralelo, para não deixar o fix só para as 04h.
+
+## Uma palavra
+**Aprendizado**

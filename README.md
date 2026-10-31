@@ -43,3 +43,17 @@
 **Tipo:** rodada · **Voto:** B
 **Justificativa:** O teste vermelho era o alarme certo: o contrato diz TED = R$ 5,00 e o código cobrava R$ 50,00 por causa de um número mágico sem constante. Desabilitar (A), ignorar (C) ou ajustar o teste para 50.0 (D) manteriam a cobrança errada no ar. Investigar custa a janela de deploy das 04h, mas corrige a causa (extraindo uma constante) e evita cobrar 10x a mais dos clientes na Black Friday.
 **Placar do grupo após esta decisão:** 🔥 7 · 💰 R$ 100 mil · 🧹 0
+
+## ⚡ EVENTO RELÂMPAGO E: "A taxa é 5 ou 50?" (05h58)
+Não afetado: a R6 foi B (suíte saudável), então o grupo já tinha investigado e sabia que a taxa correta era R$ 5. Nenhuma decisão registrada.
+
+## RODADA 7: Go/No-Go da Black Friday (06h15)
+**Tipo:** rodada · **Voto:** A
+**Justificativa:** Como a suíte está verde de verdade (o `assertThrows` da R1, o assert do ⚡D e a taxa corrigida na R6), ela segura o pico e não há bug conhecido bloqueando a abertura. Abrir 100% no horário preserva o faturamento da campanha, sem o atraso de 2h da opção B nem a perda da BF das opções C e D. O custo é a dívida técnica: o `TransferenciaService` de 80 linhas continua concentrando tudo, e a refatoração precisa ser agendada para não virar "a correção de segunda nunca chega".
+**Placar do grupo após esta decisão:** 🔥 8 · 💰 R$ 100 mil · 🧹 1
+
+## 🏁 Epílogo: placar final congelado
+🔥 8 · 💰 R$ 100 mil · 🧹 1
+**Perfil da noite:** A Noite dos Heróis (🔥 7 ou mais e 🧹 até 2)
+
+---

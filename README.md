@@ -28,3 +28,18 @@
 **Tipo:** rodada · **Voto:** A
 **Justificativa:** O `default -> null` da factory deixava o erro estourar longe da causa, no `save()`, com uma mensagem que não cita o problema. Fail-fast, com uma exceção clara na própria factory ("Tipo de conta inválido"), faz o erro nascer e morrer no mesmo lugar. A validação no controller (B) ficaria espalhada, e devolver CORRENTE por padrão (C) criaria contas erradas silenciosamente.
 **Placar do grupo após esta decisão:** 🔥 8 · 💰 R$ 70 mil · 🧹 1
+
+## ⚡ EVENTO RELÂMPAGO C: O cadastro com metade dos campos (02h20)
+**Tipo:** relâmpago · **Voto:** B
+**Justificativa:** O construtor exige todos os campos, e um terceiro construtor sobrecarregado aumentaria o "construtor telescópico". O Builder concentra os valores padrão e a validação no `build()`, deixando a criação legível e consistente. O custo é uma classe a mais, mas evita `null` espalhado (C).
+**Placar do grupo após esta decisão:** 🔥 8 · 💰 R$ 70 mil · 🧹 1
+
+## ⚡ EVENTO RELÂMPAGO D: O teste verde que não testa nada (03h20)
+**Tipo:** relâmpago · **Voto:** A
+**Justificativa:** O teste executava `depositar()` mas não tinha nenhum `assert`, então ficava verde mesmo se o depósito quebrasse (falsa segurança). Adicionar o `assertEquals` leva ~10 min e faz o teste verificar o comportamento de verdade. Apagá-lo (C) derrubaria a cobertura, e deixá-lo assim (B) esconderia regressões.
+**Placar do grupo após esta decisão:** 🔥 8 · 💰 R$ 70 mil · 🧹 0
+
+## RODADA 6: O teste vermelho às 03h45
+**Tipo:** rodada · **Voto:** B
+**Justificativa:** O teste vermelho era o alarme certo: o contrato diz TED = R$ 5,00 e o código cobrava R$ 50,00 por causa de um número mágico sem constante. Desabilitar (A), ignorar (C) ou ajustar o teste para 50.0 (D) manteriam a cobrança errada no ar. Investigar custa a janela de deploy das 04h, mas corrige a causa (extraindo uma constante) e evita cobrar 10x a mais dos clientes na Black Friday.
+**Placar do grupo após esta decisão:** 🔥 7 · 💰 R$ 100 mil · 🧹 0

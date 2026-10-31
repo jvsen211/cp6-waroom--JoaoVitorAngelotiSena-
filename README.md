@@ -16,4 +16,9 @@
 ## RODADA 3: A noite das contas gêmeas (22h50)
 **Tipo:** rodada · **Voto:** C
 **Justificativa:** O `getInstancia()` criava um objeto novo a cada chamada, então o contador recomeçava em 1001 e gerava números duplicados. Como o número da conta é identificador único perante o Bacen, escolhemos auditar as duplicatas antes de mexer no código, para saber quantos clientes já estão afetados e se há extratos cruzados. O custo é que o fix só entra às 04h, mantendo o risco de novas duplicatas até lá.
-**Placar do grupo após esta decisão:** 🔥 8 · 💰 R$ 45 mil · 🧹 2
+**Placar do grupo após esta decisão:** 🔥 8 · 💰 R$ 45 mil · 🧹 
+
+## RODADA 4: O comprovante que aponta pra pessoa errada (00h47)
+**Tipo:** rodada · **Voto:** B
+**Justificativa:** Os saldos estavam certos, mas o `new Transferencia(...)` recebia origem e destino trocados, então só o registro do extrato saía invertido. Corrigir a gravação e reprocessar o histórico leva ~2h, mas elimina a dívida de dados e entrega comprovantes corretos para auditoria. A opção A deixaria extratos antigos errados, e a C sobrecarregaria o SAC a madrugada toda.
+**Placar do grupo após esta decisão:** 🔥 9 · 💰 R$ 70 mil · 🧹 1

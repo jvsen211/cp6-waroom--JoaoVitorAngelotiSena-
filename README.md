@@ -22,3 +22,9 @@
 **Tipo:** rodada · **Voto:** B
 **Justificativa:** Os saldos estavam certos, mas o `new Transferencia(...)` recebia origem e destino trocados, então só o registro do extrato saía invertido. Corrigir a gravação e reprocessar o histórico leva ~2h, mas elimina a dívida de dados e entrega comprovantes corretos para auditoria. A opção A deixaria extratos antigos errados, e a C sobrecarregaria o SAC a madrugada toda.
 **Placar do grupo após esta decisão:** 🔥 9 · 💰 R$ 70 mil · 🧹 1
+
+
+## RODADA 5: A fábrica que devolve null (01h30)
+**Tipo:** rodada · **Voto:** A
+**Justificativa:** O `default -> null` da factory deixava o erro estourar longe da causa, no `save()`, com uma mensagem que não cita o problema. Fail-fast, com uma exceção clara na própria factory ("Tipo de conta inválido"), faz o erro nascer e morrer no mesmo lugar. A validação no controller (B) ficaria espalhada, e devolver CORRENTE por padrão (C) criaria contas erradas silenciosamente.
+**Placar do grupo após esta decisão:** 🔥 8 · 💰 R$ 70 mil · 🧹 1
